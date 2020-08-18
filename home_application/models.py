@@ -14,3 +14,20 @@ specific language governing permissions and limitations under the License.
 # from django.db import models
 
 # Create your models here.
+
+class HostModelManager(models.Manager):
+    def to_dict(self):
+        qs = super().get_queryset()
+        res_dict = [{
+            'host_theme':item.theme,
+            'host_venue':item.venue,
+            'host_content':item.content,
+        } for item in qs ]
+        return res_dict
+
+class HostModel(models.Model):
+    theme = models,CharField(max_length=30,verbose_name='主题')
+    venue = models,CharField(max_length=30,verbose_name='地点')
+    content = models.CharField(max_length=200,verbose_name='内容')
+
+    objects = HostModelManager()

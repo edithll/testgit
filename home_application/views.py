@@ -16,6 +16,9 @@ from django.shortcuts import render
 
 # 开发框架中通过中间件默认是需要登录态的，如有不需要登录的，可添加装饰器login_exempt
 # 装饰器引入 from blueapps.account.decorators import login_exempt
+from home_application.models import HostModel
+
+
 def home(request):
     """
     首页
@@ -35,3 +38,34 @@ def contact(request):
     联系页
     """
     return render(request, 'home_application/contact.html')
+
+
+def index(request):
+    """
+    会议管理系统
+    """
+    return render(request, 'home_application/index.html')
+
+
+def host_data(requset):
+    if requset.method == 'POST':
+        host_theme = requset.POST.get('hosttheme',None)
+        host_venue = requset.POST.get('hostvenue',None)
+        host_content = requset.POST.get('hostcontent',None)
+
+        if ""in[host_theme,host_venue,host_content]:
+            return render_json({'code':-1,'msg':'some of params lost.'})
+
+        try:
+            HostModel.objects.create(主题=host_theme,地点=host_venue,内容=host_content)
+        except Exception as e:
+            return render_json({'code':-1,'msg':'exists same host_theme and host_content pair.'})
+
+        return render_json({'code':0,'msg':'data insert success.'})
+    else:
+        return render({'code':0,'items':HostModel.objects.to_dict(),
+                       'catalogues':{
+                           'host_theme':'主题',
+                           'host_venue':'地点',
+                           'host_content':'内容',
+                       }})
