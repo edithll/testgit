@@ -53,25 +53,26 @@
                         <div class="form-group clearfix ">
                             <label class="col-sm-3 control-label bk-lh30 pt0">主题：</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control bk-valign-top" id="" placeholder="输入会议主题"> </div>
+                                <input type="text" class="form-control bk-valign-top"  placeholder="输入会议主题"> </div>
                         </div>
                         <div class="form-group clearfix ">
                             <label class="col-sm-3 control-label bk-lh30 pt0">地点：</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control bk-valign-top" id="" placeholder="输入会议地点"> </div>
+                                <input type="text" class="form-control bk-valign-top"  placeholder="输入会议地点"></div>
                         </div>
                         <div class="form-group has-feedback clearfix ">
                             <label class="control-label col-sm-3 pt0" for="introduction">内容：</label>
                             <div class="col-sm-9">
-                                <textarea class="form-control" rows="3" placeholder="输入会议内容"></textarea>
+                                <textarea class="form-control" rows="3"  placeholder="输入会议内容"></textarea>
                             </div>
                         </div>
                         <div class="form-group clearfix">
                             <div class="col-sm-9 col-sm-offset-3">
                                 <button type="button" class="king-btn mr10  king-success">提交</button>
-                                <button type="button" class="king-btn king-default ">取消</button>
+                                <button type="button" class="king-btn mr10  king-success" onclick="clearVal();"/></buttun>
                             </div>
                         </div>
+                       </from>
                     </div>
                 </div>
             </form>
@@ -154,15 +155,28 @@
 
 {% block extra_block %}
     <script>
+    //取消键
+    function cancel(obj){
+        let input1 = $("#theme");
+        let input2 = $("#content");
+        let input3 = $("#sort");
+        input1.val("");
+        input2.val("");
+        input3.val("");
+    }
+    </script>
+
+    <script>
      var postHostData = function(){
          $.ajax({
-             url; '{{ SITE_URL }}hostdata/',
+             url: '{{ SITE_URL }}hostdata/',
              type: 'post',
              data: {
-             "hosttheme":$('#host_theme').val(),
-             "content":$('#host_content').val(),
-         },
-         success: function (res) {
+                     "theme": $('#host_theme').val(),
+                     "venue": $('host_venue').val(),
+                     "content": $('#host_content').val()
+              }
+             success: function (res) {
              if (res.code == 0){
                  update_table();
                  $('wrong_msg').remove()
@@ -175,15 +189,16 @@
                  }
              }
          }
-         })
+         });
      }
     </script>
 
     <script>
-     var postHostData = function(){
-         function renderTpl(str,cfg){
+     var update_table = function() {
+         function renderTpl(str,cfg) {
              var re = /(#(.+?)#)/g;
-             retrun str.replace(re,function(){
+
+             return str.replace(re,function() {
                  var val = cfg[arguments[2]]+'';
                  if(typeof val == 'undefined'){
                      val = '';
@@ -193,7 +208,7 @@
          }
          //异步请求后台数据
          $.ajax({
-             url: 'https://magicbox.bk.tencent.com/static_api/v3/components/table6/data.json',
+             url: '{{ SITE_URL }}hostdata/',
              type:  'GET',
              success: function (res) {
                    var _html =' ';
@@ -209,12 +224,5 @@
          }
          });
      };
-    </script>
-    <script>
-        initRanger({
-                url: 'https://magicbox.bk.tencent.com/static_api/v3/components/list3/demo.json',
-                dataType: 'json',
-                container: '#list_1597627422798 .ranger-box tbody'
-            });
     </script>
 {% endblock %}

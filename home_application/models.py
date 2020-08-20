@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 # Create your models here.
 
 from django.db import models
+#在读取django模型时调用models函数
 
 class HostModelManager(models.Manager):
     def to_dict(self):
@@ -31,5 +32,6 @@ class HostModel(models.Model):
     theme = models.CharField(max_length=30,verbose_name='主题')
     venue = models.CharField(max_length=30,verbose_name='地点')
     content = models.CharField(max_length=200,verbose_name='内容')
+    record_time = models.DateTimeField(auto_now=True,verbose_name='会议时间')
 
     objects = HostModelManager()
