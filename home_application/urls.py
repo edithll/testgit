@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """
+urls.py: 该 Django 项目的 URL 声明; 一份由 Django 驱动的网站"目录"。
 Tencent is pleased to support the open source community by making 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community
 Edition) available.
 Copyright (C) 2017-2020 THL A29 Limited, a Tencent company. All rights reserved.
@@ -18,6 +19,8 @@ urlpatterns =(
     url(r'^$',views.home),
     url(r'^dev-guide/$', views.dev_guide),
     url(r'^contact/$', views.contact),
-    url(r'^hostpage/$',views.host_page),
-    url(r'^hostdata/$',views.host_data),
+    url(r'^hostpage/$',views.hostpage),
+    url(r'^render_json/$',views.render_json),
+    url(r'^get_save/$',views.get_save),
+    url(r'^ records/$',views.records),
 )

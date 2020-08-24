@@ -11,27 +11,43 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 specific language governing permissions and limitations under the License.
 """
 
-# from django.db import models
 
 # Create your models here.
 
 from django.db import models
 #在读取django模型时调用models函数
 
+
+#首先,定义一个Manager的子类
 class HostModelManager(models.Manager):
-    def to_dict(self):
-        qs = super().get_queryset()
-        res_dict = [{
-            'host_theme':item.theme,
-            'host_venue':item.venue,
-            'host_content':item.content,
-        } for item in qs ]
-        return res_dict
-
+    #提交
+    def get_save(self,data):
+    #在自定义管理器中定义一个方法创建对象
+        try:
+            HostModel.objects.create(
+                theme=data.get('theme'),
+                time=data.get('time'),
+                venue=data.get('venue'),
+                content=data.get('content'),
+            )
+            result = {'result': True, 'message': u"保存成功"}
+        except Exception as e:
+            result = {'result': False, 'message': u"保存失败, %s" % e}
+        return result
+# 然后,将它显式地插入到HostModel模型中
 class HostModel(models.Model):
-    theme = models.CharField(max_length=30,verbose_name='主题')
-    venue = models.CharField(max_length=30,verbose_name='地点')
-    content = models.CharField(max_length=200,verbose_name='内容')
-    record_time = models.DateTimeField(auto_now=True,verbose_name='会议时间')
-
+    theme = models.CharField(u"主题", max_length=30)
+    time = models.DateTimeField(u"时间", max_length=30)
+    venue = models.CharField(u"地点", max_length=30)
+    content = models.TextField(u"内容", null=True, blank=True)
     objects = HostModelManager()
+
+    def __unicode__(self):
+        return self.theme
+
+    class Meta:
+        #改变数据库库名
+        db_table = 'meeting'
+        #在admin页面上的名字#
+        verbose_name = u"meeting"
+        verbose_name_plural = u"meeting"
